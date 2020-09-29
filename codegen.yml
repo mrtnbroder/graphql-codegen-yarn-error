@@ -1,0 +1,32 @@
+overwrite: true
+schema: "https://countries-274616.ew.r.appspot.com/"
+documents: "src/**/*.{gql,graphql}"
+config:
+  avoidOptionals: true
+  maybeValue: T
+  pureMagicComment: true
+  withHOC: false
+  withComponent: false
+  withHooks: true
+  withRefetchFn: false
+  apolloClientVersion: 3
+  reactApolloVersion: 3
+  useTypeImports: true
+  exportFragmentSpreadSubTypes: true
+
+generates:
+  src/graphql/page.tsx:
+    config:
+      documentMode: external
+      importDocumentNodeExternallyFrom: ./schema
+    preset: import-types-preset
+    presetConfig:
+      typesPath: ./schema
+    plugins:
+      - "graphql-codegen-apollo-next-ssr"
+
+  src/graphql/schema.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

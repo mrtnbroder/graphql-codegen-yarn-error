@@ -1,0 +1,128 @@
+diff --git a/bin.js b/bin.js
+index 99a6d1fe68e455025eca22abfa41b52769b3dfc0..1936fb32b162d9fddf1440a1d23f2f3ce1426269 100644
+--- a/bin.js
++++ b/bin.js
+@@ -281,10 +281,10 @@ async function getPluginByName(name, pluginLoader) {
+             return await pluginLoader(moduleName);
+         }
+         catch (err) {
+-            if (err.message.indexOf(`Cannot find module '${moduleName}'`) === -1) {
++            if (err.code === "MODULE_NOT_FOUND") {
+                 throw new pluginHelpers.DetailedError(`Unable to load template plugin matching ${name}`, `
+               Unable to load template plugin matching '${name}'.
+-              Reason: 
++              Reason:
+                 ${err.message}
+             `);
+             }
+@@ -298,7 +298,7 @@ async function getPluginByName(name, pluginLoader) {
+     throw new pluginHelpers.DetailedError(`Unable to find template plugin matching ${name}`, `
+         Unable to find template plugin matching '${name}'
+         Install one of the following packages:
+-        
++
+         ${possibleNamesMsg}
+       `);
+ }
+@@ -317,10 +317,10 @@ async function getPresetByName(name, loader) {
+             return loaded;
+         }
+         catch (err) {
+-            if (err.message.indexOf(`Cannot find module '${moduleName}'`) === -1) {
++            if (err.code === "MODULE_NOT_FOUND") {
+                 throw new pluginHelpers.DetailedError(`Unable to load preset matching ${name}`, `
+               Unable to load preset matching '${name}'.
+-              Reason: 
++              Reason:
+                 ${err.message}
+             `);
+             }
+@@ -334,7 +334,7 @@ async function getPresetByName(name, loader) {
+     throw new pluginHelpers.DetailedError(`Unable to find preset matching ${name}`, `
+         Unable to find preset matching '${name}'
+         Install one of the following packages:
+-        
++
+         ${possibleNamesMsg}
+       `);
+ }
+@@ -417,16 +417,16 @@ const loadSchema = async (schemaPointers, config) => {
+ 
+         ${e.message || e}
+         ${e.stack || ''}
+-    
++
+         GraphQL Code Generator supports:
+           - ES Modules and CommonJS exports (export as default or named export "schema")
+           - Introspection JSON File
+           - URL of GraphQL endpoint
+           - Multiple files with type definitions (glob expression)
+           - String in config file
+-    
++
+         Try to use one of above options and run codegen again.
+-    
++
+       `);
+     }
+ };
+@@ -490,14 +490,14 @@ async function loadContext(configFilePath) {
+         if (configFilePath) {
+             throw new pluginHelpers.DetailedError(`Config ${configFilePath} does not exist`, `
+         Config ${configFilePath} does not exist.
+-  
++
+           $ graphql-codegen --config ${configFilePath}
+-  
++
+         Please make sure the --config points to a correct file.
+       `);
+         }
+         throw new pluginHelpers.DetailedError(`Unable to find Codegen config file!`, `
+-        Please make sure that you have a configuration file under the current directory! 
++        Please make sure that you have a configuration file under the current directory!
+       `);
+     }
+     if (result.isEmpty) {
+@@ -721,7 +721,7 @@ async function executeCodegen(input) {
+         if (generateKeys.length === 0) {
+             throw new pluginHelpers.DetailedError('Invalid Codegen Configuration!', `
+         Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
+-        
++
+         It should looks like that:
+ 
+         schema:
+@@ -738,9 +738,9 @@ async function executeCodegen(input) {
+             if (generates[filename].plugins.length === 0) {
+                 throw new pluginHelpers.DetailedError('Invalid Codegen Configuration!', `
+           Please make sure that your codegen config file has defined plugins list for output "${filename}".
+-          
++
+           It should looks like that:
+-  
++
+           schema:
+             - my-schema.graphql
+           generates:
+@@ -754,9 +754,9 @@ async function executeCodegen(input) {
+         if (rootSchemas.length === 0 &&
+             Object.keys(generates).some(filename => !generates[filename].schema || generates[filename].schema.length === 0)) {
+             throw new pluginHelpers.DetailedError('Invalid Codegen Configuration!', `
+-        Please make sure that your codegen config file contains either the "schema" field 
++        Please make sure that your codegen config file contains either the "schema" field
+         or every generated file has its own "schema" field.
+-        
++
+         It should looks like that:
+         schema:
+           - my-schema.graphql
+@@ -1546,7 +1546,7 @@ async function init() {
+     // Emit status to the terminal
+     log$1(`
+     Config file generated at ${bold(relativePath)}
+-    
++
+       ${bold('$ npm install')}
+ 
+     To install the plugins.

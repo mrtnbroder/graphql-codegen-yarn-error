@@ -1,0 +1,6 @@
+query {
+  Country {
+    name
+    # check the docs for more info
+  }
+}
